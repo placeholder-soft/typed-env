@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+BASE="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd ../.. && pwd)"
+
+# pushd "$ROOT"
+
+main() {
+  ENV=$1
+  export CURRENT_PROFILE=$ENV
+
+  ############################################# check ENV #############################################
+  case $ENV in
+  local)
+    echo use "local" env
+    ;;
+  dev)
+    echo use "dev" env
+    ;;
+  *)
+    echo unkown env "$ENV"
+    exit 1
+    ;;
+  esac
+
+  ############################################# export env #############################################
+  case $ENV in
+  local)
+    export GREET="hello local"
+    ;;
+  dev) ;;
+
+  *)
+    echo unkown adminsdk env "$ADMINSDK_ENV"
+    exit 1
+    ;;
+  esac
+
+  mkdir -p env/base
+  pushd env/base/
+  FILES=$(find . -type f)
+  popd
+
+  for f in $FILES; do
+    writeTemplateFile "$f"
+  done
+
+  envrcMainPath=env/.envrc.main
+
+  if [ ! -d "$envrcMainPath" ]; then
+    cp $ROOT/$envrcMainPath .envrc
+  else
+    cp $envrcMainPath .envrc
+  fi
+
+  echo "$ENV" >env/.current_profile
+  echo "switched to env $ENV. current profile: $CURRENT_PROFILE"
+  if [[ -z "$NO_DIRENV" ]]; then
+    direnv allow
+  fi
+}
+
+linkFile() {
+  ORIGIN_FILE_PATH=$1
+  LINK_FILE_PATH=$2
+  rm -f $LINK_FILE_PATH
+  ln -s $ORIGIN_FILE_PATH $LINK_FILE_PATH
+}
+
+copyFile() {
+  ORIGIN_FILE_PATH=$1
+  COPY_FILE_PATH=$2
+  rm -f $COPY_FILE_PATH
+  cp $ORIGIN_FILE_PATH $COPY_FILE_PATH
+  chmod 400 $COPY_FILE_PATH
+}
+
+writeTemplateFile() {
+  FILE_PATH=$1
+  FILE_DIR=$(dirname "${FILE_PATH}")
+  mkdir -p "$FILE_DIR"
+
+  rm -f "$ROOT"/"$FILE_PATH"
+  "$BASE"/mo "$ROOT"/env/base/"$FILE_PATH" >"$ROOT"/"$FILE_PATH"
+  chmod 400 "$ROOT"/"$FILE_PATH"
+}
+
+if [ -n "${1-}" ]; then
+  main "$1"
+else
+  printf 'type-env use ENV \nexample: type-env use dev'
+fi

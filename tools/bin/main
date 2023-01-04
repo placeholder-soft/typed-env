@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+BASE="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+
+if [ "${1}" = "use" ]; then
+  sh $BASE/use "${2}"
+elif [ "${1}" = "get-env" ]; then
+  node $BASE/get-env "${2}" "${3}"
+elif [ "${1}" = "get-env-name" ]; then
+  node $BASE/get-env-name "${2}" "${3}"
+else
+  echo "unknown command ${1}"
+  exit 1
+fi
