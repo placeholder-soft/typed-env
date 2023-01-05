@@ -1,4 +1,4 @@
-import { AllProjectEnvNames, ProjectEnvName } from "../generated/env-name";
+import { AllProjectEnvNames, ProjectEnvName } from "../../generated/env-name";
 import { anyEnv, typedEnv } from "./typed-env";
 
 test("boolean env", () => {
