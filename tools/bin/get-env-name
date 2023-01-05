@@ -6,18 +6,20 @@ const [prevEnv, afterEnv] = process.argv.slice(2);
 const prev = dotenv.parse(prevEnv);
 const after = dotenv.parse(afterEnv);
 
-const names = [];
+const names = {};
 for (const [k] of Object.entries(after)) {
   // only print changed vars
   if (prev[k] !== after[k]) {
-    names.push(k);
+    names[k] = k;
   }
 }
 
 const fileContent = `export const AllProjectEnvNames = ${JSON.stringify(
-  names
+  names,
+  null,
+  2
 )} as const;
-export type ProjectEnvName = typeof AllProjectEnvNames[number];`;
+export type ProjectEnvName = keyof typeof AllProjectEnvNames;`;
 
 const formatContent = prettier.format(fileContent, {
   parser: "typescript",

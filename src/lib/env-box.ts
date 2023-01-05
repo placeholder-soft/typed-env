@@ -1,91 +1,9 @@
-import * as process from 'process';
-import { toBoolean, toInteger, toJSON, toString } from './parseType';
+import * as process from "process";
 
-type Nullable = undefined | null;
-export class EnvBox<T extends string | number | boolean | Nullable> {
-  constructor(readonly name: string, private readonly value?: T) {}
+type EnvBoxValueType = string | undefined;
+type DefinedAs<T, U> = T extends undefined ? U | undefined : U;
 
-  required() {
-    if (this.value == null) {
-      throw new Error(
-        `Required env variable for name: ${this.name} is not set`
-      );
-    }
-    return new RequiredEnvBox<NonNullable<T>>(this.name, this.value);
-  }
-
-  optional() {
-    return new EnvBox(this.name, this.value);
-  }
-
-  default(value: T) {
-    return new EnvBox(this.name, this.value ?? value);
-  }
-  nonEmpty() {
-    if (this.value == null || this.value === '') {
-      throw new Error(`Env variable for name: ${this.name} is empty`);
-    }
-    return new EnvBox(this.name, this.value);
-  }
-  toBoolean() {
-    const { status, value } = this.checkRequiredAndValue();
-    if (status) {
-      return value;
-    }
-    return toBoolean(this.name, value);
-  }
-
-  toInteger() {
-    const { status, value } = this.checkRequiredAndValue();
-    if (status) {
-      return value;
-    }
-    return toInteger(this.name, value);
-  }
-
-  toString() {
-    const { status, value } = this.checkRequiredAndValue();
-    if (status) {
-      return value;
-    }
-    return toString(this.name, value);
-  }
-
-  toJSON() {
-    const { status, value } = this.checkRequiredAndValue();
-    if (status) {
-      return value;
-    }
-    return toJSON(this.name, value);
-  }
-
-  private checkRequiredAndValue():
-    | {
-        status: true;
-        value?: Nullable;
-      }
-    | { status: false; value: NonNullable<T> } {
-    if (this.value == null) {
-      return {
-        status: true,
-        value: this.value as Nullable,
-      };
-    }
-    return {
-      status: false,
-      value: this.value,
-    };
-  }
-
-  static of(name: string) {
-    return new EnvBox(
-      name,
-      process.env[name] as string | number | boolean | Nullable
-    );
-  }
-}
-
-export class RequiredEnvBox<T extends string | number | boolean> {
+export class EnvBox<T extends EnvBoxValueType> {
   constructor(readonly name: string, private readonly value: T) {}
 
   required() {
@@ -94,42 +12,54 @@ export class RequiredEnvBox<T extends string | number | boolean> {
         `Required env variable for name: ${this.name} is not set`
       );
     }
-    return new RequiredEnvBox<T>(this.name, this.value);
+    return new EnvBox(this.name, this.value);
   }
 
   optional() {
     return new EnvBox(this.name, this.value);
   }
 
-  default(value: NonNullable<T>) {
-    return new RequiredEnvBox(this.name, this.value ?? value);
+  default(value: string) {
+    return new EnvBox(this.name, this.value ?? value);
   }
   nonEmpty() {
-    if (this.value == null || this.value === '') {
+    if (this.value == null || this.value === "") {
       throw new Error(`Env variable for name: ${this.name} is empty`);
     }
-    return new RequiredEnvBox(this.name, this.value);
+    return new EnvBox(this.name, this.value);
   }
   toBoolean() {
-    return toBoolean(this.name, this.value);
+    const value = this.value;
+    if (value === "true" || value === "TRUE") {
+      return true;
+    }
+    if (value === "false" || value === "FALSE") {
+      return false;
+    }
+
+    throw new Error(
+      `Env variable for name: ${this.name} is not boolean, value: ${value}`
+    );
   }
 
-  toInteger() {
-    return toInteger(this.name, this.value);
+  toInt(radix?: number): DefinedAs<T, number> {
+    const value = this.toString();
+    if (value == null) {
+      return undefined as unknown as DefinedAs<T, number>;
+    }
+    const val = parseInt(value, radix);
+    if (isNaN(val)) {
+      throw new Error(`Env variable for name: ${this.name} is not an integer`);
+    }
+    return val;
   }
 
   toString() {
-    return toString(this.name, this.value);
+    return this.value;
   }
 
-  toJSON() {
-    return toJSON(this.name, this.value);
-  }
-
-  static of(name: string) {
-    return new RequiredEnvBox(
-      name,
-      process.env[name] as string | number | boolean
-    );
+  static of<T extends string>(name: T) {
+    const val = process.env[name];
+    return new EnvBox(name, val);
   }
 }

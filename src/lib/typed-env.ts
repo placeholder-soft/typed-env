@@ -1,4 +1,4 @@
-import { EnvBox } from './env-box';
+import { EnvBox } from "./env-box";
 
 export function typedEnv<T extends string>(key: T) {
   return EnvBox.of(key);

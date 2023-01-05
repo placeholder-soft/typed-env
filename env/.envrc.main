@@ -5,55 +5,15 @@ prevEnv="$(env)"
 PATH_add node_modules/.bin
 PATH_add tools/bin
 
-## SHA1 is used by notice dev to update their local .envrc file when upstream has changed.
-## if you see this message, examine the latest .envrc.main file and update your local .envrc file's sha1.
-#ENVRC_DEV_SHA1="kFillWithYours"
-#main_env="env/.envrc.main"
-#if [ ! -f "$main_env" ] || [ "$(shasum "${main_env}" | cut -d' ' -f1)" != "$ENVRC_DEV_SHA1" ]; then
-#  red() { echo -e "\033[31m$@\033[0m"; }
-#  echo -e "$(red env/.envrc.main is missing or outdated, please update yours...)"
-#  echo -e expecting "$(red $(shasum "${main_env}" | cut -d' ' -f1))"
-#fi
-
-# if not install sam
-if ! command -v sam &>/dev/null; then
-  echo "sam could not be found, installing..."
-fi
-
-export PHASE_DEV_NAME="phase-dev"
-
-load_current_profile() {
-  if [ ! -f env/.current_profile ]; then
-    echo 'env/.current_profile not found. Run `yarn use <env>` to select env'
-    exit 1
-  fi
-  CURRENT_PROFILE="$(cat env/.current_profile)"
-  echo CURRENT_PROFILE $CURRENT_PROFILE
-
-  if [ -f env/.envrc.$CURRENT_PROFILE ]; then
-    source_env env/.envrc.$CURRENT_PROFILE
-  else
-    echo "No .envrc.$CURRENT_PROFILE file found, quiting..."
-    exit 1
-  fi
-}
-
-load_current_profile
-#=====================================
-# source_env env/.envrc.[env].local-override
-if [ -f "env/.envrc.$CURRENT_PROFILE.local-override" ]; then
-  source_env "env/.envrc.$CURRENT_PROFILE.local-override"
-fi
-#=====================================
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 export NX_WORKSPACE_ROOT=$DIR
 
-if [ ! -d "${NX_WORKSPACE_ROOT}/generated" ]; then
-  mkdir "${NX_WORKSPACE_ROOT}/generated"
+if [ ! -d "${NX_WORKSPACE_ROOT}/src/generated" ]; then
+  mkdir "${NX_WORKSPACE_ROOT}/src/generated"
 fi
 
 echo "generate current env"
-type-env get-env "${prevEnv}" "$(env)" > "${NX_WORKSPACE_ROOT}/env/.current_env"
+get-env "${prevEnv}" "$(env)" > "${NX_WORKSPACE_ROOT}/env/.current_env"
 echo "generate env name"
-type-env get-env-name "${prevEnv}" "$(env)" >"${NX_WORKSPACE_ROOT}/generated/env-name.ts"
+get-env-name "${prevEnv}" "$(env)" >"${NX_WORKSPACE_ROOT}/src/generated/env-name.ts"
