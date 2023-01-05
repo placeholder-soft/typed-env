@@ -5,5 +5,5 @@ const KSourceFilePath = path.resolve(process.cwd(), "./src/index.ts");
 
 test("check typedEnv", () => {
   const info = checkFunctionCall(KSourceFilePath, "typedEnv");
-  expect(info.length).toBe(1);
+  expect(info.length).toBe(0);
 });

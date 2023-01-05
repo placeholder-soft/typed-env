@@ -1,23 +1,30 @@
 import path from "path";
-import { Project, SyntaxKind, SourceFile, ts, CallExpression } from "ts-morph";
+import { Project, SyntaxKind, SourceFile } from "ts-morph";
+import { uniqBy } from "../utils/util";
 import { packageNameWithVersion } from "./package";
+import { TFunCallArg, TSource } from "./types";
 
 const KTsconfigPath = path.resolve(process.cwd(), "./tsconfig.json");
 
-type TFunCallArg = { path: string; args: string[] };
-
-const getCallArgs = (
-  c: CallExpression<ts.CallExpression>,
+const getArgsFromCall = (
+  source: TSource,
   filePath: string,
   funName: string
 ) => {
-  if (c.getExpressionIfKind(SyntaxKind.Identifier)?.getText() === funName) {
-    return {
-      path: `${filePath}#L${c.getStartLineNumber()}`,
-      args: c.getArguments().map((r) => r.getText()),
-    };
+  const args: TFunCallArg[] = [];
+  const calls = source.getDescendantsOfKind(SyntaxKind.CallExpression);
+  for (const c of calls) {
+    if (c.getExpressionIfKind(SyntaxKind.Identifier)?.getText() === funName) {
+      args.push({
+        path: `${filePath}#L${c.getStartLineNumber()}`,
+        args: c.getArguments().map((r) => r.getText()),
+      });
+    }
+
+    args.push(...getArgsFromCall(c, filePath, funName));
   }
-  return;
+
+  return uniqBy(args, (r) => `${r.path}${args.join("")}`);
 };
 
 const getFunctionArgs = (
@@ -34,24 +41,16 @@ const getFunctionArgs = (
   }
   const args: TFunCallArg[] = [];
 
-  const calls = sourceFile.getDescendantsOfKind(SyntaxKind.CallExpression);
-
-  for (const c of calls) {
-    const result = getCallArgs(c, filePath, funName);
-    if (result) {
-      args.push(result);
-    }
-  }
+  args.push(...getArgsFromCall(sourceFile, filePath, funName));
 
   const files = sourceFile.getReferencedSourceFiles();
-
   if (files.length > 0) {
     for (const f of files) {
       args.push(...getFunctionArgs(f, funName, ignorePackage));
     }
   }
 
-  return args;
+  return uniqBy(args, (r) => `${r.path}${args.join("")}`);
 };
 
 export const checkFunctionCall = (
