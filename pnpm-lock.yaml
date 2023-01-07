@@ -4,6 +4,7 @@ specifiers:
   '@types/fs-extra': ^9.0.13
   '@types/jest': 28.1.1
   '@types/node': 16.11.7
+  '@types/ramda': ^0.28.20
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
   dotenv: ^16.0.3
@@ -13,6 +14,7 @@ specifiers:
   jest: 28.1.1
   jest-environment-jsdom: 28.1.1
   prettier: ^2.6.2
+  ramda: ^0.28.0
   rimraf: ^3.0.2
   ts-jest: 28.0.5
   ts-morph: ^17.0.1
@@ -25,12 +27,14 @@ dependencies:
   dotenv: 16.0.3
   fs-extra: 11.1.0
   prettier: 2.8.1
+  ramda: 0.28.0
   tslib: 2.4.1
 
 devDependencies:
   '@types/fs-extra': 9.0.13
   '@types/jest': 28.1.1
   '@types/node': 16.11.7
+  '@types/ramda': 0.28.20
   '@typescript-eslint/eslint-plugin': 5.48.0_4hohz3l7qhfcfwfqkfxfv7ap7a
   '@typescript-eslint/parser': 5.48.0_oy7hgmlo6357d5kkcjbkfgtg4q
   eslint: 8.15.0
@@ -866,6 +870,12 @@ packages:
 
   /@types/prettier/2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
+    dev: true
+
+  /@types/ramda/0.28.20:
+    resolution: {integrity: sha512-MeUhzGSXQTRsY19JGn5LIBTLxVEnyF6HDNr08KSJqybsm4DlfLIgK1jBHjhpiSyk252tXYmp+UOe0UFg0UiFsA==}
+    dependencies:
+      ts-toolbelt: 6.15.5
     dev: true
 
   /@types/semver/7.3.13:
@@ -3151,6 +3161,10 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /ramda/0.28.0:
+    resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
+    dev: false
+
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
     dev: true
@@ -3557,6 +3571,10 @@ packages:
       typescript: 4.8.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
+
+  /ts-toolbelt/6.15.5:
+    resolution: {integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==}
     dev: true
 
   /tsd/0.25.0:
