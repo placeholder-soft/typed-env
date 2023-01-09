@@ -5,7 +5,7 @@ import { getArgsFromCall } from "./call";
 export function getCallUsageArgsFromStatement(
   args: TGetArgsFromExpression
 ): TParseParameters[][] {
-  const { source, filePath, funcNames } = args;
+  const { source, filePath, chainCallFuncNames } = args;
 
   const argsInfo: TParseParameters[][] = [];
 
@@ -17,7 +17,7 @@ export function getCallUsageArgsFromStatement(
     const result = getArgsFromCall({
       source: es,
       filePath,
-      funcNames,
+      chainCallFuncNames,
     });
 
     result && argsInfo.push(result);

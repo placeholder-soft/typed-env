@@ -1,7 +1,7 @@
 {
   "name": "typed-env",
   "bin": {
-    "type-env": "tools/bin/main"
+    "typed-env": "tools/bin/main"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

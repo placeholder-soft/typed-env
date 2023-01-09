@@ -4,7 +4,7 @@ import { TGetArgsFromExpression, TParseParameters } from "../types";
 export function getArgsFromCall(
   args: TGetArgsFromExpression
 ): TParseParameters[] | undefined {
-  const { source, filePath, funcNames } = args;
+  const { source, filePath, chainCallFuncNames } = args;
 
   const calls = source.getDescendantsOfKind(SyntaxKind.CallExpression);
 
@@ -15,7 +15,7 @@ export function getArgsFromCall(
 
     const peName = pe?.getName();
 
-    if (peName && funcNames.includes(peName)) {
+    if (peName && chainCallFuncNames.includes(peName)) {
       argsInfo.push(
         generateArgINfo({
           filePath,
@@ -30,7 +30,7 @@ export function getArgsFromCall(
       .getExpressionIfKind(SyntaxKind.Identifier)
       ?.getText();
 
-    if (identifierText && funcNames.includes(identifierText)) {
+    if (identifierText && chainCallFuncNames.includes(identifierText)) {
       argsInfo.push(
         generateArgINfo({
           filePath,

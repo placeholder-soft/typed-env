@@ -89,5 +89,5 @@ writeTemplateFile() {
 if [ -n "${1-}" ]; then
   main "$1"
 else
-  printf 'type-env use ENV \nexample: type-env use dev'
+  printf 'typed-env use ENV \nexample: typed-env use dev'
 fi

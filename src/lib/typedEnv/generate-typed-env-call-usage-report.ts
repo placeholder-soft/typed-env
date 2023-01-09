@@ -16,6 +16,9 @@ type TFunCallArg = {
 
 export type Report = { sourceFilePath: string; options?: ProjectOptions };
 
+/**
+ * @description Get the call report of all typedEnv functions
+ */
 export function generateTypedEnvCallUsageReport({
   sourceFilePath,
   options,
@@ -23,7 +26,7 @@ export function generateTypedEnvCallUsageReport({
   return generateCallUsageReport({
     sourceFilePath,
     options,
-    funcNames: [
+    chainCallFuncNames: [
       "typedEnv",
       "default",
       "required",

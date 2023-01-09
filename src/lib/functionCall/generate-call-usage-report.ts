@@ -10,7 +10,7 @@ import {
 } from "./types";
 
 function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
-  const { sourceFile, funcNames, analysisPathIgnorePatterns = true } = args;
+  const { sourceFile, chainCallFuncNames, analysisPathIgnorePatterns = true } = args;
 
   const filePath = sourceFile.getFilePath();
   if (analysisPathIgnorePatterns) {
@@ -24,7 +24,7 @@ function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
     ...getCallUsageArgsFromStatement({
       source: sourceFile,
       filePath,
-      funcNames,
+      chainCallFuncNames,
     })
   );
 
@@ -34,7 +34,7 @@ function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
       result.push(
         ...callUsageArgs<T>({
           sourceFile: f,
-          funcNames,
+          chainCallFuncNames,
           analysisPathIgnorePatterns,
         })
       );
@@ -44,6 +44,9 @@ function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
   return result;
 }
 
+/**
+ * @description Get the call report of the function
+ */
 export function generateCallUsageReport<T>(
   arg: TGenerateCallUsageReportBase
 ): TParseParameters[][];
@@ -54,7 +57,7 @@ export function generateCallUsageReport<T>(
 export function generateCallUsageReport<T>(
   args: TGenerateCallUsageReportBase | TGenerateCallUsageReport<T>
 ) {
-  const { sourceFilePath, funcNames, analysisPathIgnorePatterns, options } =
+  const { sourceFilePath, chainCallFuncNames, analysisPathIgnorePatterns, options } =
     args;
 
   const convertData = hasConvertData<TGenerateCallUsageReport<T>>(args)
@@ -64,7 +67,7 @@ export function generateCallUsageReport<T>(
   const project = new Project(options);
   const result = callUsageArgs({
     sourceFile: project.getSourceFileOrThrow(sourceFilePath),
-    funcNames,
+    chainCallFuncNames,
     analysisPathIgnorePatterns,
   });
 

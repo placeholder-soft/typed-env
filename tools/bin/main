@@ -8,6 +8,10 @@ elif [ "${1}" = "get-env" ]; then
   node $BASE/get-env "${2}" "${3}"
 elif [ "${1}" = "get-env-name" ]; then
   node $BASE/get-env-name "${2}" "${3}"
+elif [ "${1}" = "gen-env" ]; then
+  node $BASE/gen-env "${2}" "${3}" "${4}"
+elif [ "${1}" = "help" ]; then
+  cat $BASE/help.txt
 else
   echo "unknown command ${1}"
   exit 1

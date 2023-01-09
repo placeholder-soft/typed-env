@@ -1,29 +1,35 @@
-import { AllProjectEnvNames, ProjectEnvName } from "../../generated/env-name";
 import { anyEnv, typedEnv } from "./typed-env";
 
 test("boolean env", () => {
-  const envBox = typedEnv<ProjectEnvName>("NX_WORKSPACE_ROOT");
+  process.env["NX_WORKSPACE_ROOT"] = "true";
+  const envBox = typedEnv("NX_WORKSPACE_ROOT");
   const rs = envBox.required().toBoolean();
-  console.log("required boolean", rs);
+  expect(rs).toBe(true);
+
+  process.env["ENV_TEXT_BOOLEAN_2"] = "false";
   const envBox2 = anyEnv("ENV_TEXT_BOOLEAN_2");
   const s = envBox2.optional().toBoolean();
-  console.log("options boolean", s);
+  expect(s).toBe(false);
 });
 
 test("integer env", () => {
-  const envBox = typedEnv(AllProjectEnvNames.NX_WORKSPACE_ROOT);
+  process.env["ENV_TEST_NUMBER"] = "123";
+  const envBox = typedEnv("ENV_TEST_NUMBER");
   const rs = envBox.required().toInt();
-  console.log("required integer", rs);
+  expect(rs).toBe(123);
+
   const envBox2 = anyEnv("ENV_TEST_NUMBER_2");
   const s = envBox2.optional().toInt();
-  console.log("options integer", s);
+  expect(s).toBe(undefined);
 });
 
 test("string env", () => {
-  const envBox = typedEnv<ProjectEnvName>("NX_WORKSPACE_ROOT");
+  process.env["NX_WORKSPACE_ROOT"] = "aaa";
+  const envBox = typedEnv("NX_WORKSPACE_ROOT");
   const rs = envBox.required().toString();
-  console.log("required string", rs);
+  expect(rs).toBe("aaa");
+
   const envBox2 = anyEnv("ENV_TEST_STRING_2");
   const s = envBox2.optional().toString();
-  console.log("options string", s);
+  expect(s).toBe(undefined);
 });
