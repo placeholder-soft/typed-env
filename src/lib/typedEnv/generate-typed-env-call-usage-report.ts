@@ -34,46 +34,69 @@ export function generateTypedEnvCallUsageReport({
     ],
     convertData: (data: TParseParameters[][]) => {
       const result = parseEnvInfo(data);
-      const errorMsg = errorReport(result);
+      const exceptionResult = exceptionReport(result);
       return {
         envNames: Object.keys(result),
         data: result,
-        errorMsg,
+        exceptionReport: exceptionResult,
       };
     },
   });
 }
 
-const errorReport = (data: TFunCallArg) => {
+const exceptionReport = (data: TFunCallArg) => {
   const envNames = Object.keys(data);
 
-  const msg = envNames.map((r) => {
-    const env = data[r];
-    const paths = Object.keys(env);
+  return envNames
+    .map((r) => {
+      const env = data[r];
+      const paths = Object.keys(env);
 
-    const types = uniqBy(
-      paths.map((p) => env[p].type),
-      (t) => t
-    );
+      const errors = [];
+      const warnings = [];
 
-    const line = paths
-      .map((p) => ({
-        path: p,
-        errorMsg: env[p].errorMsg,
-      }))
-      .filter((e) => e != null);
+      const types = uniqBy(
+        paths.map((p) => env[p].type),
+        (t) => t
+      );
 
-    if (types.length > 1) {
+      if (types.length > 0) {
+        errors.push(`secretKey: ${r} has different types: ${types.join(",")}`);
+      }
+
+      const defaultValue = uniqBy(
+        paths.map((p) => env[p].default).filter((r) => r != null) as string[],
+        (t) => t
+      );
+
+      if (defaultValue.length > 0) {
+        warnings.push(
+          `secretKey: ${r} has different default value: ${defaultValue.join(
+            ","
+          )}`
+        );
+      }
+
+      const line = paths
+        .map((p) => ({
+          path: p,
+          errors: env[p].errorMsg,
+        }))
+        .filter((e) => e != null);
+
+      if (errors.length === 0 && warnings.length === 0 && line.length === 0) {
+        return;
+      }
+
       return {
         secretKey: r,
         types,
         line,
-        errorMessage: `secretKey: ${r} has different types: ${types.join(",")}`,
+        errors,
+        warnings,
       };
-    }
-  });
-
-  return msg;
+    })
+    .filter((r) => r != null);
 };
 
 const parseEnvInfo = (result: TParseParameters[][]) => {
@@ -141,14 +164,32 @@ const parseCallChaining = (args: TParseParameters[]) => {
 
   let errorMsg = "";
 
-  if (toInt) {
-    try {
-      const toIntArg = parseInt(toInt.args[0]);
-      if (toIntArg < 2 || toIntArg > 36) {
-        errorMsg = `radix must be between 2 and 36, but got ${toIntArg}`;
+  const type = toStringInfo
+    ? "string"
+    : toInt
+    ? "number"
+    : toBoolean
+    ? "boolean"
+    : "string";
+
+  switch (type) {
+    case "number": {
+      try {
+        const toIntArg = parseInt(toInt!.args[0]);
+        if (toIntArg < 2 || toIntArg > 36) {
+          errorMsg = `radix must be between 2 and 36, but got ${toIntArg}`;
+        }
+      } catch (e) {
+        errorMsg = `parseInt(${args[0]}) is not a number`;
       }
-    } catch (e) {
-      errorMsg = `parseInt(${args[0]}) is not a number`;
+      break;
+    }
+    case "boolean": {
+      const toBooleanArg = toBoolean!.args[0];
+      if (toBooleanArg !== "true" && toBooleanArg !== "false") {
+        errorMsg = `toBoolean(${toBooleanArg}) is not a boolean`;
+      }
+      break;
     }
   }
 
@@ -158,13 +199,7 @@ const parseCallChaining = (args: TParseParameters[]) => {
     required:
       (optionalInfoIndex === -1 && requiredInfoIndex !== -1) ||
       optionalInfoIndex > requiredInfoIndex,
-    type: toStringInfo
-      ? "string"
-      : toInt
-      ? "number"
-      : toBoolean
-      ? "boolean"
-      : "string",
+    type,
     ...(defaultInfo
       ? {
           default: defaultInfo.args[0],
