@@ -21,5 +21,11 @@
     "strict": true
   },
   "include": ["src", "index.ts"],
-  "exclude": ["lib", "node_modules", "./**/__tests__/*", "**/*.d.ts"]
+  "exclude": [
+    "lib",
+    "node_modules",
+    "./**/__tests__/*",
+    "**/*.d.ts",
+    "./**/generated/*"
+  ]
 }
