@@ -1,5 +1,5 @@
 {
-  "name": "type-env",
+  "name": "typed-env",
   "bin": {
     "type-env": "tools/bin/main"
   },
@@ -18,14 +18,10 @@
     "use": "tools/bin/main use"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "fs-extra": "^11.1.0",
-    "prettier": "^2.6.2",
-    "ramda": "^0.28.0",
-    "tslib": "^2.3.0"
+    
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.13",
+    "tslib": "^2.3.0",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
     "@types/ramda": "^0.28.20",

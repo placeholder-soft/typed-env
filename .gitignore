@@ -44,5 +44,4 @@ env/.envrc.dev
 env/.envrc.prod
 env/.current_profile
 env/.current_env
-generated/env-name.ts
-src/generated/env-name.ts
+env-name.ts

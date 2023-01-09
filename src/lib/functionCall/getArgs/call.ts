@@ -1,24 +1,10 @@
 import { CallExpression, SyntaxKind, ts } from "ts-morph";
-import {
-  hasParseArg,
-  TGetArgsFromCall,
-  TGetArgsFromCallBase,
-  TParseParameters,
-} from "../types";
+import { TGetArgsFromExpression, TParseParameters } from "../types";
 
-export function getArgsFromCall<T>(
-  args: TGetArgsFromCallBase
-): TParseParameters[] | undefined;
-export function getArgsFromCall<T>(args: TGetArgsFromCall<T>): T;
-
-export function getArgsFromCall<T>(
-  args: TGetArgsFromCallBase | TGetArgsFromCall<T>
-) {
+export function getArgsFromCall(
+  args: TGetArgsFromExpression
+): TParseParameters[] | undefined {
   const { source, filePath, funcNames } = args;
-
-  const parseArg = hasParseArg<TGetArgsFromCall<T>>(args)
-    ? args.parseArg
-    : undefined;
 
   const calls = source.getDescendantsOfKind(SyntaxKind.CallExpression);
 
@@ -55,9 +41,6 @@ export function getArgsFromCall<T>(
     }
   }
 
-  if (parseArg) {
-    return parseArg(argsInfo);
-  }
   if (argsInfo.length > 0) {
     return argsInfo;
   }

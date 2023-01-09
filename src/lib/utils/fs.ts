@@ -1,31 +1,32 @@
-import fsa from "fs-extra";
 import fs from "fs";
 import path from "path";
 
-async function mkdirPath(pathStr: string) {
-  let projectPath = "";
-  const folderPath = path.parse(pathStr);
-  const tempDirArray = folderPath.dir.split("\\");
-  for (let i = 0; i < tempDirArray.length; i++) {
-    projectPath = projectPath + tempDirArray[i];
-    if (fs.existsSync(projectPath)) {
-      const tempstats = fs.statSync(projectPath);
-      if (!tempstats.isDirectory()) {
-        fs.unlinkSync(projectPath);
-        fsa.mkdirpSync(projectPath);
-      }
-    } else {
-      fsa.mkdirpSync(projectPath);
+const checkPath = (pth: string) => {
+  if (process.platform === "win32") {
+    const pathHasInvalidWinCharacters = /[<>:"|?*]/.test(
+      pth.replace(path.parse(pth).root, "")
+    );
+
+    if (pathHasInvalidWinCharacters) {
+      const error = new Error(`Path contains invalid characters: ${pth}`);
+      throw error;
     }
   }
-  return projectPath;
-}
+};
 
-export async function writeFileSync(
-  path: string,
-  data: string | NodeJS.ArrayBufferView,
-  options?: fs.WriteFileOptions
-) {
-  await mkdirPath(path);
-  fs.writeFileSync(path, data, options);
-}
+type Option = { mode?: number | undefined } | number;
+
+const getMode = (options?: Option) => {
+  const defaults = { mode: 0o777 };
+  if (typeof options === "number") return options;
+  return { ...defaults, ...options }.mode;
+};
+
+export const ensureDirSync = (dir: string, options?: Option) => {
+  checkPath(dir);
+
+  return fs.mkdirSync(dir, {
+    mode: getMode(options),
+    recursive: true,
+  });
+};
