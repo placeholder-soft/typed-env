@@ -20,15 +20,13 @@ function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
   }
   const result = [];
 
-  if (filePath.includes("typed-env.ts")) {
-    result.push(
-      ...getCallUsageArgsFromStatement({
-        source: sourceFile,
-        filePath,
-        funcNames,
-      })
-    );
-  }
+  result.push(
+    ...getCallUsageArgsFromStatement({
+      source: sourceFile,
+      filePath,
+      funcNames,
+    })
+  );
 
   const files = sourceFile.getReferencedSourceFiles();
   if (files.length > 0) {
