@@ -1,0 +1,7 @@
+typed-env <command>
+
+Usage:
+
+typed-env diff-env current-env-json change-env-json           Output changed environment variables
+typed-env diff-env-name current-env-json change-env-json      Output changed environment variable name
+typed-env generate-env sourceFilePath tsconfigPath output     Check the file according to tsconfig and generate environment variables

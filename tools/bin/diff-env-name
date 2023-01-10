@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+const [prevEnv, afterEnv] = process.argv.slice(2);
+const { parse } = require("./parse");
+
+const prev = parse(prevEnv);
+const after = parse(afterEnv);
+
+const names = {};
+for (const [k] of Object.entries(after)) {
+  // only print changed vars
+  if (prev[k] !== after[k]) {
+    names[k] = k;
+  }
+}
+
+const fileContent = `export const AllProjectEnvNames = ${JSON.stringify(
+  names,
+  null,
+  2
+)} as const;
+export type ProjectEnvName = keyof typeof AllProjectEnvNames;`;
+
+console.log(fileContent);

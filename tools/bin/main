@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+BASE="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+
+elif [ "${1}" = "diff-env" ]; then
+  node $BASE/diff-env "${2}" "${3}"
+elif [ "${1}" = "diff-env-name" ]; then
+  node $BASE/diff-env-name "${2}" "${3}"
+elif [ "${1}" = "generate-env" ]; then
+  node $BASE/generate-env "${2}" "${3}" "${4}"
+elif [ "${1}" = "help" ]; then
+  cat $BASE/help.txt
+else
+  echo "unknown command ${1}"
+  exit 1
+fi

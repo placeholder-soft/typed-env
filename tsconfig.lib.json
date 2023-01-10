@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "declaration": true,
+    "types": ["node"],
+    "noEmit": false,
+    "sourceMap": false
+  },
+  "exclude": [
+    "jest.config.ts",
+    "node_modules",
+    "./**/__tests__/*",
+    "./**/__fixtures__/*",
+    "**/generated/*",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*-test.ts"
+  ],
+  "include": ["**/*.ts"]
+}

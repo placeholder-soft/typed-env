@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const { generateEnv } = require("../../dist/lib/typedEnv/generate-env");
+
+const [kSourceFilePath, kTsconfigPath, kOutputPath] = process.argv.slice(2);
+
+generateEnv({
+  sourceFilePath: kSourceFilePath,
+  options: {
+    tsConfigFilePath: kTsconfigPath,
+  },
+  output: kOutputPath,
+});
+
+console.log("Generated env file at", kOutputPath);
