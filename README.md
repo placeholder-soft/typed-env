@@ -6,18 +6,16 @@ typed-env can help us better handle environment variables
 
 ### [cli](#use-typed-env-cli)
 
-- [use](#use-cli)
-- [get-env](#get-env-cli)
-- [get-env-name](#get-env-name-cli)
-- [gen-env](#gen-env-cli)
+- [diff-env](#diff-env-cli)
+- [diff-env-name](#diff-env-name-cli)
+- [generate-env](#generate-env-cli)
 
 ### [lib](#use-typed-env-lib)
 
-- [generateCallUsageReport](#generateCallUsageReport-lib)
 - [typeEnv](#typeEnv-lib)
 - [anyEnv](#anyEnv-lib)
-- [genEnvName](#genEnvName-lib)
-- [genEnv](#genEnv-lib)
+- [generateEnvName](#generateEnvName-lib)
+- [generateEnv](#generateEnv-lib)
 - [generateTypedEnvCallUsageReport](#generateTypedEnvCallUsageReport-lib)
 
 ## Install
@@ -28,67 +26,43 @@ npm install typed-env
 
 ## <span id="use-typed-env-cli">Use typed-env cli</span>
 
-### <span id="use-cli">use</span>
+### <span id="diff-env-cli">diff-env</span>
 
-typed-env use [local | dev]
+Output changed environment variables
+
+typed-env diff-env current-env-json change-env-json
 
 ```bash
-typed-env use local
+$ typed-env diff-env "$(env)" "$(env)"
 ```
 
-### <span id="get-env-cli">get-env</span>
+### <span id="diff-env-name-cli">diff-env-name</span>
 
-typed-env get-env current-env-json change-env-json
+Output changed environment variable name
+
+typed-env diff-env-name current-env-json change-env-json
 
 ```bash
-typed-env get-env "$(env)" "$(env)"
+$ typed-env diff-env "$(env)" "$(env)"
 ```
 
-### <span id="get-env-name-cli">get-env-name</span>
+### <span id="generate-env-cli">generate-env</span>
 
-typed-env get-env-name current-env-json change-env-json
+Check the file according to tsconfig and generate environment variables
 
-```bash
-typed-env get-env "$(env)" "$(env)"
-```
-
-### <span id="gen-env-cli">gen-env</span>
-
-typed-env gen-env sourceFilePath tsconfigPath output
+typed-env generate-env sourceFilePath tsconfigPath output
 
 ```bash
-typed-env gen-env /Users/home/projects/src/lib/usage-typed-env.ts /Users/home/projects/tsconfig.json /Users/home/projects/.env
+$ typed-env generate-env /Users/home/projects/src/lib/usage-typed-env.ts /Users/home/projects/tsconfig.json /Users/home/projects/.env
 ```
 
 ## <span id="use-typed-env-lib">Use typed-env lib</span>
 
-### <span id="generateCallUsageReport-lib">generateCallUsageReport</span>
-
-```typescript
-generateCallUsageReport({
-  sourceFilePath: "/home/index.ts",
-  options: {
-    tsConfigFilePath: "/home/.tsconfig.json",
-  },
-  chainCallFuncNames: [
-    "typedEnv",
-    "default",
-    "required",
-    "optional",
-    "toString",
-    "toInt",
-    "toBoolean",
-  ],
-  convertData: (data: TParseParameters[][]) => {
-    ...
-    return parse(data);
-  },
-});
-```
-
 ### <span id="typeEnv-lib">typeEnv</span>
 
 ```typescript
+declare function typedEnv(key: EnvName): EnvBox<EnvName>;
+
 typedEnv<T>("TEST").required().toInt();
 ```
 
@@ -98,10 +72,12 @@ typedEnv<T>("TEST").required().toInt();
 anyEnv("TEST").required().toInt();
 ```
 
-### <span id="genEnvName-lib">genEnvName</span>
+### <span id="generateEnvName-lib">generateEnvName</span>
+
+Check the file according to tsconfig and generate environment variable name
 
 ```typescript
-genEnvName({
+generateEnvName({
   sourceFilePath: "/home/index.ts",
   options: {
     tsConfigFilePath: "/home/.tsconfig.json",
@@ -110,10 +86,12 @@ genEnvName({
 });
 ```
 
-### <span id="genEnv-lib">genEnv</span>
+### <span id="generateEnv-lib">generateEnv</span>
+
+Check the file according to tsconfig and generate environment variables
 
 ```typescript
-genEnv({
+generateEnv({
   sourceFilePath: "/home/index.ts",
   options: {
     tsConfigFilePath: "/home/.tsconfig.json",
@@ -123,6 +101,8 @@ genEnv({
 ```
 
 ### <span id="generateTypedEnvCallUsageReport-lib">generateTypedEnvCallUsageReport</span>
+
+Check the Typed-env call report of the file according to tsconfig
 
 ```typescript
 const info = generateTypedEnvCallUsageReport({

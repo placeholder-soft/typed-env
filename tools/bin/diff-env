@@ -6,12 +6,6 @@ const { parse } = require("./parse");
 const prev = parse(prevEnv);
 const after = parse(afterEnv);
 
-console.log("***************");
-console.log(prev);
-console.log("***************");
-console.log(after);
-console.log("***************");
-
 // print direnv exported variables for dotenv to use in jest tests
 for (const [k, v] of Object.entries(after)) {
   // only print changed vars

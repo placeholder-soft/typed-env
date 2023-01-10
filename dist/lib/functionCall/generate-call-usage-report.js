@@ -5,7 +5,7 @@ const ts_morph_1 = require("ts-morph");
 const statement_1 = require("./getArgs/statement");
 const types_1 = require("./types");
 function callUsageArgs(args) {
-    const { sourceFile, chainCallFuncNames, analysisPathIgnorePatterns = true } = args;
+    const { sourceFile, chainCallFuncNames, analysisPathIgnorePatterns = true, } = args;
     const filePath = sourceFile.getFilePath();
     if (analysisPathIgnorePatterns) {
         if (filePath.includes("node_modules")) {
@@ -31,7 +31,7 @@ function callUsageArgs(args) {
     return result;
 }
 function generateCallUsageReport(args) {
-    const { sourceFilePath, chainCallFuncNames, analysisPathIgnorePatterns, options } = args;
+    const { sourceFilePath, chainCallFuncNames, analysisPathIgnorePatterns, options, } = args;
     const convertData = (0, types_1.hasConvertData)(args)
         ? args.convertData
         : undefined;

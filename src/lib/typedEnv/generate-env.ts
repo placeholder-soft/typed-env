@@ -7,7 +7,7 @@ import {
   Report,
 } from "./generate-typed-env-call-usage-report";
 
-export const genEnvName = (arg: Report & { output: string }) => {
+export const generateEnvName = (arg: Report & { output: string }) => {
   const envNames = generateTypedEnvCallUsageReport(arg).envNames.reduce(
     (pre, current) => {
       return {
@@ -29,7 +29,7 @@ export type ProjectEnvName = keyof typeof AllProjectEnvNames;`;
   fs.writeFileSync(arg.output, fileContent);
 };
 
-export const genEnv = (arg: Report & { output: string }) => {
+export const generateEnv = (arg: Report & { output: string }) => {
   const report = generateTypedEnvCallUsageReport(arg);
 
   const envValue = report.envNames.reduce<string[]>((acc, cur) => {

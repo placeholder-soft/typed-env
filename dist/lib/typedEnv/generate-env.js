@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.genEnv = exports.genEnvName = void 0;
+exports.generateEnv = exports.generateEnvName = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const fs_2 = require("../utils/fs");
 const util_1 = require("../utils/util");
 const generate_typed_env_call_usage_report_1 = require("./generate-typed-env-call-usage-report");
-const genEnvName = (arg) => {
+const generateEnvName = (arg) => {
     const envNames = (0, generate_typed_env_call_usage_report_1.generateTypedEnvCallUsageReport)(arg).envNames.reduce((pre, current) => {
         return {
             ...pre,
@@ -22,8 +22,8 @@ export type ProjectEnvName = keyof typeof AllProjectEnvNames;`;
     (0, fs_2.ensureDirSync)(folderPath.dir);
     fs_1.default.writeFileSync(arg.output, fileContent);
 };
-exports.genEnvName = genEnvName;
-const genEnv = (arg) => {
+exports.generateEnvName = generateEnvName;
+const generateEnv = (arg) => {
     const report = (0, generate_typed_env_call_usage_report_1.generateTypedEnvCallUsageReport)(arg);
     const envValue = report.envNames.reduce((acc, cur) => {
         const envInfo = report.data[cur];
@@ -48,4 +48,4 @@ const genEnv = (arg) => {
     (0, fs_2.ensureDirSync)(folderPath.dir);
     fs_1.default.writeFileSync(arg.output, envValue.join("\n"));
 };
-exports.genEnv = genEnv;
+exports.generateEnv = generateEnv;

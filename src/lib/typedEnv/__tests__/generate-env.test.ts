@@ -1,13 +1,19 @@
 import { existsSync } from "fs";
 import path from "path";
-import { genEnv, genEnvName } from "../generate-env";
+import { generateEnv, generateEnvName } from "../generate-env";
 
-const kSourceFilePath = path.resolve(__dirname, "./usage-typed-env.ts");
-const kTsconfigPath = path.resolve(__dirname, "../../../../tsconfig.t.json");
+const kSourceFilePath = path.resolve(
+  __dirname,
+  "../__fixtures__/usage-typed-env.ts"
+);
+const kTsconfigPath = path.resolve(
+  __dirname,
+  "../__fixtures__/tsconfig.t.json"
+);
 
 test("generate env name", () => {
-  const kOutputPath = path.resolve(__dirname, "./env-name.ts");
-  genEnvName({
+  const kOutputPath = path.resolve(__dirname, "../__fixtures__/env-name.ts");
+  generateEnvName({
     sourceFilePath: kSourceFilePath,
     options: {
       tsConfigFilePath: kTsconfigPath,
@@ -18,8 +24,8 @@ test("generate env name", () => {
 });
 
 test("generate env", () => {
-  const kOutputPath = path.resolve(__dirname, "./.env");
-  genEnv({
+  const kOutputPath = path.resolve(__dirname, "../__fixtures__/.env");
+  generateEnv({
     sourceFilePath: kSourceFilePath,
     options: {
       tsConfigFilePath: kTsconfigPath,

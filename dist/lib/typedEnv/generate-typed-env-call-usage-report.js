@@ -3,11 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateTypedEnvCallUsageReport = void 0;
 const generate_call_usage_report_1 = require("../functionCall/generate-call-usage-report");
 const util_1 = require("../utils/util");
+/**
+ * @description Get the call report of all typedEnv functions
+ */
 function generateTypedEnvCallUsageReport({ sourceFilePath, options, }) {
     return (0, generate_call_usage_report_1.generateCallUsageReport)({
         sourceFilePath,
         options,
-        funcNames: [
+        chainCallFuncNames: [
             "typedEnv",
             "default",
             "required",
@@ -107,6 +110,9 @@ const parseCallChaining = (args) => {
     const toBoolean = args.find((r) => r.funcName === "toBoolean");
     if (typeEnvInfo.args[0] != null &&
         ["''", '""'].includes(typeEnvInfo.args[0])) {
+        // console.warn(
+        //   `not support secretKey is not \"\" or '' in ${typeEnvInfo.path}`
+        // );
         return;
     }
     const secretKey = JSON.parse(typeEnvInfo.args[0]);

@@ -16,4 +16,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./lib/typedEnv/env-box"), exports);
 __exportStar(require("./lib/typedEnv/typed-env"), exports);
-__exportStar(require("./lib/functionCall/generate-call-usage-report"), exports);
+__exportStar(require("./lib/typedEnv/generate-typed-env-call-usage-report"), exports);
+__exportStar(require("./lib/typedEnv/generate-env"), exports);

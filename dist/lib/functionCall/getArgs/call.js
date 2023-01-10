@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getArgsFromCall = void 0;
 const ts_morph_1 = require("ts-morph");
 function getArgsFromCall(args) {
-    const { source, filePath, funcNames } = args;
+    const { source, filePath, chainCallFuncNames } = args;
     const calls = source.getDescendantsOfKind(ts_morph_1.SyntaxKind.CallExpression);
     const argsInfo = [];
     for (const c of calls) {
         const pe = c.getExpressionIfKind(ts_morph_1.SyntaxKind.PropertyAccessExpression);
         const peName = pe?.getName();
-        if (peName && funcNames.includes(peName)) {
+        if (peName && chainCallFuncNames.includes(peName)) {
             argsInfo.push(generateArgINfo({
                 filePath,
                 funcName: peName,
@@ -20,7 +20,7 @@ function getArgsFromCall(args) {
         const identifierText = c
             .getExpressionIfKind(ts_morph_1.SyntaxKind.Identifier)
             ?.getText();
-        if (identifierText && funcNames.includes(identifierText)) {
+        if (identifierText && chainCallFuncNames.includes(identifierText)) {
             argsInfo.push(generateArgINfo({
                 filePath,
                 funcName: identifierText,

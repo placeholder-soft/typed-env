@@ -4,14 +4,14 @@ exports.getCallUsageArgsFromStatement = void 0;
 const ts_morph_1 = require("ts-morph");
 const call_1 = require("./call");
 function getCallUsageArgsFromStatement(args) {
-    const { source, filePath, funcNames } = args;
+    const { source, filePath, chainCallFuncNames } = args;
     const argsInfo = [];
     const expressionStatements = source.getDescendantsOfKind(ts_morph_1.SyntaxKind.ExpressionStatement);
     for (const es of expressionStatements) {
         const result = (0, call_1.getArgsFromCall)({
             source: es,
             filePath,
-            funcNames,
+            chainCallFuncNames,
         });
         result && argsInfo.push(result);
     }

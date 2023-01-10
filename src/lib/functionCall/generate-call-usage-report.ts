@@ -1,4 +1,3 @@
-import path from "path";
 import { Project } from "ts-morph";
 import { getCallUsageArgsFromStatement } from "./getArgs/statement";
 import {
@@ -10,7 +9,11 @@ import {
 } from "./types";
 
 function callUsageArgs<T>(args: TCallUsageArgs): TParseParameters[][] {
-  const { sourceFile, chainCallFuncNames, analysisPathIgnorePatterns = true } = args;
+  const {
+    sourceFile,
+    chainCallFuncNames,
+    analysisPathIgnorePatterns = true,
+  } = args;
 
   const filePath = sourceFile.getFilePath();
   if (analysisPathIgnorePatterns) {
@@ -57,8 +60,12 @@ export function generateCallUsageReport<T>(
 export function generateCallUsageReport<T>(
   args: TGenerateCallUsageReportBase | TGenerateCallUsageReport<T>
 ) {
-  const { sourceFilePath, chainCallFuncNames, analysisPathIgnorePatterns, options } =
-    args;
+  const {
+    sourceFilePath,
+    chainCallFuncNames,
+    analysisPathIgnorePatterns,
+    options,
+  } = args;
 
   const convertData = hasConvertData<TGenerateCallUsageReport<T>>(args)
     ? args.convertData

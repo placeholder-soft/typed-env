@@ -3,8 +3,8 @@
   "bin": {
     "typed-env": "tools/bin/main"
   },
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "files": [
     "lib/**/*",
     "tools/**/*",
@@ -14,7 +14,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "rimraf lib && tsc -p tsconfig-release.json",
+    "build": "rimraf dist && tsc -p tsconfig.lib.json",
     "use": "tools/bin/main use"
   },
   "dependencies": {

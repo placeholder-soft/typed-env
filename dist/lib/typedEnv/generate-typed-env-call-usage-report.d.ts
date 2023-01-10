@@ -14,6 +14,9 @@ export declare type Report = {
     sourceFilePath: string;
     options?: ProjectOptions;
 };
+/**
+ * @description Get the call report of all typedEnv functions
+ */
 export declare function generateTypedEnvCallUsageReport({ sourceFilePath, options, }: Report): {
     envNames: string[];
     data: TFunCallArg;
